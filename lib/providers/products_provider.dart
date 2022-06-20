@@ -9,12 +9,16 @@ class ProductList with ChangeNotifier {
     return [..._productList];
   }
 
+  List<Product> get getFavoriteProducts {
+    return _productList.where((element) => element.isFavourite==true).toList();
+  }
+
   Product getProduct(String id) {
     return _productList.firstWhere((element) => element.id == id);
   }
 
   void add(Product product) {
     _productList.add(product);
-    notifyListeners(); // it will call all the registered listeners
+   ] // it will call all the registered listeners
   }
 }
