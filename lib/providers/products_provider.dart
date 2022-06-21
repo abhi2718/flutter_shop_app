@@ -10,7 +10,9 @@ class ProductList with ChangeNotifier {
   }
 
   List<Product> get getFavoriteProducts {
-    return _productList.where((element) => element.isFavourite==true).toList();
+    return _productList
+        .where((element) => element.isFavourite == true)
+        .toList();
   }
 
   Product getProduct(String id) {
@@ -19,6 +21,6 @@ class ProductList with ChangeNotifier {
 
   void add(Product product) {
     _productList.add(product);
-   ] // it will call all the registered listeners
+    notifyListeners(); // it will call all the registered listeners
   }
 }
