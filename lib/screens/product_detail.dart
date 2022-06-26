@@ -16,7 +16,37 @@ class ProductDetail extends StatelessWidget {
       appBar: AppBar(
           title:  Text(selectedProduct.title),
           ),
-      body: const Text('welcome'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: 400,
+              child: Image.network(
+                selectedProduct.imageUrl,
+                 fit: BoxFit.fill,
+                ),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            Text(
+              selectedProduct.title,
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+              ),
+            Text('₹ ${selectedProduct.price}',
+            style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            Text(selectedProduct.description,style: const TextStyle(
+                fontSize: 16,
+              ),),
+          ],
+        ),
+      ),
     );
   }
 }

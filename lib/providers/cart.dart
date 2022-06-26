@@ -20,13 +20,28 @@ class Cart with ChangeNotifier {
               id: existingItem.id,
               title: existingItem.title,
               quantity: existingItem.quantity + 1,
-              price: existingItem.price)
-              );
+              price: existingItem.price));
     } else {
       _itemsInCart.putIfAbsent(
-          id, () => CartItem(id: id, title: title, price: price, quantity: 1)
-          );
+          id, () => CartItem(id: id, title: title, price: price, quantity: 1));
     }
+    notifyListeners();
+  }
+
+  double get totalAmount {
+    var total = 0.0;
+    _itemsInCart.values.toList().forEach((element) {
+      total += (element.price * element.quantity.toDouble());
+    });
+    return total;
+  }
+
+  void removeItemFromCart(id) {
+    _itemsInCart.remove(id);
+     notifyListeners();
+  }
+  void clearCart(){
+    _itemsInCart.clear();
     notifyListeners();
   }
 }

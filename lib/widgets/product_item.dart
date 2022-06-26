@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import '../screens/product_detail.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
-
+import '../screens/cart.dart';
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key}) : super(key: key);
+
+  get seconds => null;
   @override
   Widget build(BuildContext context) {
     Product product = Provider.of<Product>(context, listen: false);
@@ -44,11 +46,20 @@ class ProductItem extends StatelessWidget {
           ),
           trailing: IconButton(
             onPressed: () {
+              ScaffoldMessenger.maybeOf(context)?.clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration:const Duration(
+                    seconds:4
+                  ),
+                  content: const Text('Item added in your cart !'),
+                  action: SnackBarAction(
+                    label: 'See Cart',
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(CartScreen.routeName);
+                    },
+                  )));
               cartProvider.addItemsInCart(
-                 product.id,
-                 product.title,
-                 product.price
-                );
+                  product.id, product.title, product.price);
             },
             icon: Icon(
               Icons.shopping_cart,
