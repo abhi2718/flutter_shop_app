@@ -57,7 +57,8 @@ class ProductItem extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushNamed(CartScreen.routeName);
                     },
-                  )));
+                  )),
+                  );
               cartProvider.addItemsInCart(
                   product.id, product.title, product.price);
             },

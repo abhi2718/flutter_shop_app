@@ -49,9 +49,30 @@ class CartScreen extends StatelessWidget {
                   direction: DismissDirection.horizontal,
                   key: ValueKey(
                       cartProvider.getItemsInCart.values.toList()[index].id),
-                  onDismissed: (dismissDirection) {
-                    cartProvider.removeItemFromCart(
-                        cartProvider.getItemsInCart.values.toList()[index].id);
+                  confirmDismiss: (dismissDirection) {
+                    return showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text("Are you sure ?"),
+                        content:
+                            const Text("Do you want to remove item from cart"),
+                        actions: [
+                          ElevatedButton(
+                              child: const Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                                cartProvider.removeItemFromCart(cartProvider
+                                    .getItemsInCart.values
+                                    .toList()[index]
+                                    .id);
+                              }),
+                          ElevatedButton(
+                              child: const Text('Cancel'), onPressed: () {
+                                Navigator.of(context).pop(false);
+                              }),
+                        ],
+                      ),
+                    );
                   },
                   background: Container(
                     margin: const EdgeInsets.only(bottom: 10),
