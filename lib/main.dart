@@ -8,6 +8,7 @@ import './providers/products_provider.dart';
 import './providers/cart.dart';
 import './providers/order.dart';
 import './screens/admin.dart';
+import './screens/edit_product_screen.dart';
 
 void main() {
   runApp(App());
@@ -40,7 +41,11 @@ class App extends StatelessWidget {
               ProductDetail.routeName: (context) => const ProductDetail(),
               CartScreen.routeName: (context) => const CartScreen(),
               OrderScreen.routeName: (context) => const OrderScreen(),
-              EditOrDeleteProduct.routeName: (context) => const EditOrDeleteProduct(),
-            }));
+              EditOrDeleteProduct.routeName: (context) =>
+                  const EditOrDeleteProduct(),
+              EditProductScreen.routeName:(context) => const EditProductScreen()
+            },
+            ),
+            );
   }
 }
