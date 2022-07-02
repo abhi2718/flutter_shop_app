@@ -38,6 +38,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void submitForm() {
+    final isValidate = _formKey.currentState!.validate();
+    if(isValidate){
+         return;
+    }
     _formKey.currentState?.save();
   }
 
@@ -61,16 +65,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
             key: _formKey,
             child: ListView(children: [
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: const InputDecoration(
                     labelText: 'Title', hintText: 'Enter title of product'),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 focusNode: _titleFocusNode,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Titile is required';
+                  }
+                  if (value.length <= 4) {
+                    return 'Titile must be at least 4 characters';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   print(value);
                 },
               ),
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: const InputDecoration(
                     labelText: 'Price', hintText: 'Enter price of product'),
                 keyboardType: TextInputType.number,
@@ -78,9 +93,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onSaved: (value) {
                   print(value);
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Price is required';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Enter valid number';
+                  }
+                  if (double.parse(value) <= 0) {
+                    return 'Enter amount greater than zero';
+                  }
+                  return null;
+                },
                 // it will show the next button in keyboard
               ),
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: const InputDecoration(
                     labelText: 'Descripation',
                     hintText: 'Enter Descripation of product'),
@@ -93,6 +121,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 onSaved: (value) {
                   print(value);
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Descripation is required';
+                  }
+
+                  if (value.length <= 10) {
+                    return 'descripation  must be at least 10 characters';
+                  }
+                  return null;
                 },
               ),
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
@@ -109,6 +147,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   flex: 4,
                   fit: FlexFit.tight,
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: const InputDecoration(
                       labelText: 'Image Url',
                       hintText: 'Image URL',
@@ -122,6 +161,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     },
                     onSaved: (value) {
                       print(value);
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Image URL is required';
+                      }
+
+                      if (!value.startsWith('https://') &&
+                          !value.startsWith('http://')) {
+                        return 'Please enter valid image URL';
+                      }
+                      if(!value.endsWith('.png')&&!value.endsWith('.jpg')&&!value.endsWith('.jpeg')){
+                        return 'Please enter valid image URL';
+                      }
+                      return null;
                     },
                   ),
                 )
