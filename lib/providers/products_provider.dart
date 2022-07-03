@@ -19,8 +19,19 @@ class ProductList with ChangeNotifier {
     return _productList.firstWhere((element) => element.id == id);
   }
 
-  void add(Product product) {
-    _productList.add(product);
+  void add(data) {
+    _productList.add(Product(
+      id: data['price'],
+      title: data['title'],
+      description: data['description'],
+      price: double.parse(data['price']),
+      imageUrl: data['image'],
+    ));
     notifyListeners(); // it will call all the registered listeners
+  }
+
+  void deleteProduct(id) {
+    _productList.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 }

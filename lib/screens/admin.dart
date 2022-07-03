@@ -23,6 +23,7 @@ class EditOrDeleteProduct extends StatelessWidget {
             (context, index) => AdminProductItem(
               id:value.getProducts[index].id,
               title: value.getProducts[index].title,
+              price: value.getProducts[index].price,
               imageUrl: value.getProducts[index].imageUrl,
             ),
             itemCount: value.getProducts.length,

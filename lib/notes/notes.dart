@@ -1,3 +1,214 @@
+// List Methods are following :-
+
+// 1. Map
+// List list=[1,2,3,4];
+//   List even=list.map((item)=>item*2).toList();
+//   print(even);
+// output -> [2, 4, 6, 8]
+
+// 2. Filter
+// List list=[1,2,3,4];
+//   List even=list.where((item)=>item%2==0).toList();
+//   print(even);
+// output -> [2, 4]
+
+// 3. find
+// List list=[1,2,3,4];
+//   var even=list.firstWhere((item)=>item%2==0);
+//   print(even);
+// output -> 2
+
+// 4. removing unwanted item from list -> list.removeWhere((item)=>item["id"]!=="34")
+// 5. reversing a list -> List.reversed
+// 6. is list empty -> List.isEmpty->bool
+// 7. contains
+
+// List list=[1,2,3,4];
+//   var isContain=list.contains(2);
+//   print(isContain);
+// output - > true
+
+// 8. finding index where test pass
+// List list=[1,2,3,4];
+//   int index=list.indexWhere((element) => element==2 );
+//   print(index);
+// output -> 1
+
+// 9. removing item at given index
+// List list=[1,2,3,4];
+//   int index=list.indexWhere((element) => element==2 );
+//   print(index);
+//   list.removeAt(index);
+//   print(list);
+
+// 10 . any element of list pass test
+//  List list=[1,2,3];
+//   var ans=list.any((element) => element==2 );
+//   print(ans);
+
+// Map methods are following
+Map map = {
+  "name": "Abhishek Singh",
+  "age": "22",
+};
+// 1.  map.containsKey('name')->bool
+//print(map.containsKey('name'));
+
+// 2.  map.update(key,(oldValue){ retun newValue});
+// map.update('age',(oldValue){
+//   print(oldValue);
+//   return 23;
+// });
+// print(map);
+
+// 3. putIfAbsent
+// map.putIfAbsent('school',(){
+//     return "DMA";
+//   });
+//   print(map);
+
+//4. remove(key)
+// map.remove('school');
+
+// Navigation in Flutter
+// 1 . From one screen to another screen with payload :-)
+
+// -> Navigator.of(context).pushNamed(route,arguments:{});
+// receiving payload on otherScreen ->
+// final Map<String, String> routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+
+// 2. removing top screen from stack -> Navigator.of(context).pop();
+
+// Making drawer and setting navigation -> 
+
+// class MainDrawer extends StatelessWidget {
+//   const MainDrawer({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Drawer(
+//       child: Column(
+//         children: [
+//           const SizedBox(height: 30,),
+//           ListTile(
+//             leading:const Icon(Icons.shop),
+//             title: const Text('Home'),
+//             onTap: () {
+// =========> important-----> Navigator.of(context).pushReplacementNamed( ProductOverview.routeName);
+//             },
+//           ),
+//           ListTile(
+//             leading: const Icon(Icons.shop_2_outlined),
+//             title:const Text('Orders'),
+//             onTap: () {
+//               Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+//             },
+//           ),
+//           ListTile(
+//             leading: const Icon(Icons.edit),
+//             title:const Text('Edit Product'),
+//             onTap: () {
+//               Navigator.of(context).pushReplacementNamed(EditOrDeleteProduct.routeName);
+//             },
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// provvider 
+
+// making provider class 
+// -> ChangeNotifier (Mixin),notifyListeners();
+
+// import 'package:flutter/material.dart';
+// import './product.dart';
+// import '../dummay_data/dummayData.dart';
+
+// class ProductList with ChangeNotifier {
+//   final List<Product> _productList = [...dummyProduct];
+
+//   List<Product> get getProducts {
+//     return [..._productList];
+//   }
+
+//   List<Product> get getFavoriteProducts {
+//     return _productList
+//         .where((element) => element.isFavourite == true)
+//         .toList();
+//   }
+
+//   Product getProduct(String id) {
+//     return _productList.firstWhere((element) => element.id == id);
+//   }
+
+//   void add(data) {
+//     _productList.add(Product(
+//       id: data['price'],
+//       title: data['title'],
+//       description: data['description'],
+//       price: double.parse(data['price']),
+//       imageUrl: data['image'],
+//     ));
+//     notifyListeners(); // it will call all the registered listeners
+//   }
+
+//   void deleteProduct(id) {
+//     _productList.removeWhere((element) => element.id == id);
+//     notifyListeners();
+//   }
+// }
+
+// using provider class 
+
+// 1. ChangeNotifierProvider :-
+
+// ChangeNotifierProvider<ClassNameOfTheProviderClassWhichYouWantToUse>(
+//       create: (context) {
+//         return ObjectOfThatClassWhichProviderYouWantToUse();
+//       },
+//       child: ScreenWichWantToUseTheProviderClass,
+//     );
+
+// 2. MultiProvider
+
+// MultiProvider(
+//       providers: [
+//         ChangeNotifierProvider<ProductList>(
+//           create: (context) => ProductList(),
+//         ),
+//         ChangeNotifierProvider<Cart>(
+//           create: (context) => Cart(),
+//         ),
+//         ChangeNotifierProvider<Order>(
+//           create: (context) => Order(),
+//         ),
+//       ],
+//       child: MaterialApp()
+// );
+
+
+// Listner ->
+
+// 1 ->   Cart cartProvider = Provider.of<Cart>(context, listen: true);
+// 2 ->   Consumer :-
+// Consumer<Cart>(builder: (context, cart, child) {
+//             return Badge(
+//               value: '${cart.numberOfItemsInCart}',
+//               child: IconButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pushNamed(CartScreen.routeName);
+//                 },
+//                 icon: const Icon(
+//                   Icons.shopping_cart,
+//                   color: Colors.red,
+//                 ),
+//               ),
+//             );
+//           }),
+
+// Input Form :-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
