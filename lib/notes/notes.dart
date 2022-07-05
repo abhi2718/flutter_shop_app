@@ -401,3 +401,61 @@ class _EditProductScreenState extends State<EditProductScreen> {
     );
   }
 }
+
+// API calling 
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// Future<void> add(data) {
+//     final url = Uri.parse(
+//         'https://shop-c2818-default-rtdb.firebaseio.com/products');
+//     return http
+//         .post(
+//       url,
+//       body: json.encode({
+//         'title': data['title'],
+//         'description': data['description'],
+//         'price': data['price'],
+//         'imageUrl': data['image'],
+//         'isFavourite': false,
+//       }),
+//     )
+//     .then((response) {
+//       // print('Response status: ${response.statusCode}');
+//       // print('Response body: ${response.body}');
+//       final body = json.decode(response.body);
+//       _productList.add(Product(
+//         id: body['name'],
+//         title: data['title'],
+//         description: data['description'],
+//         price: double.parse(data['price']),
+//         imageUrl: data['image'],
+//       ));
+//       notifyListeners(); // it will call all the registered listeners
+//     }).catchError((error) {
+//       throw error;
+//     });
+//   }
+
+// Handlling API calling response in widget
+// productsProvider.add(data).catchError((error) {
+//       return showDialog<Null>(
+//         context:context,
+//         builder: (ctx) =>  AlertDialog(
+//           title:const Text('Error'),
+//           content: const Text('Some things went wrong'),
+//           actions: [
+//             ElevatedButton(
+//               child: const Text('OKAY'), 
+//               onPressed: () {
+//                 Navigator.of(ctx).pop();
+//               }
+//             )
+//           ],
+//           )
+//       );
+//     }).then((value) {
+//       setState(() {
+//         _loading = false;
+//       });
+//       Navigator.of(context).pop();
+//     })
