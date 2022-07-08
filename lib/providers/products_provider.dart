@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './product.dart';
-import '../dummay_data/dummayData.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _productList = [...dummyProduct];
+  List<Product> _productList = [];
 
   List<Product> get getProducts {
     return [..._productList];
@@ -53,8 +52,8 @@ class ProductList with ChangeNotifier {
   // }
 
   add(data) async {
-    final url =
-        Uri.parse('https://shop-c2818-default-rtdb.firebaseio.com/products.json');
+    final url = Uri.parse(
+        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
     try {
       final response = await http.post(
         url,
@@ -78,18 +77,59 @@ class ProductList with ChangeNotifier {
         ));
         notifyListeners(); // it will call all the registered listeners
         return {
-          'status':200,
-          'success':true,
+          'status': 200,
+          'success': true,
         };
       } else {
         return {
-          'status':statusCode,
-          'success':false,
+          'status': statusCode,
+          'success': false,
         };
       }
     } catch (error) {
       rethrow;
     }
+  }
+
+  fetchAndAddProducts() async {
+    final url = Uri.parse(
+        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
+    try {
+      final response = await http.get(url);
+      final body = json.decode(response.body) as Map<String, dynamic>;
+      final statusCode = response.statusCode;
+      if (statusCode == 200) {
+        List<Product> _products = [];
+        body.forEach((key, value) {
+          _products.add(Product(
+            id: key,
+            title: value['title'],
+            description: value['description'],
+            price: double.parse(value['price']),
+            imageUrl: value['imageUrl'],
+            isFavourite: value['isFavourite'],
+          ));
+        });
+        _productList = [..._products];
+        notifyListeners(); // it will call all the registered listeners
+        return {
+          'status': 200,
+          'success': true,
+        };
+      } else {
+        return {
+          'status': statusCode,
+          'success': false,
+        };
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  void addProducts(productList) {
+    _productList = [...productList];
+    notifyListeners();
   }
 
   void deleteProduct(id) {
