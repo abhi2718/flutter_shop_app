@@ -4,6 +4,7 @@ import '../screens/product_detail.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
 import '../screens/cart.dart';
+
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key}) : super(key: key);
 
@@ -28,8 +29,17 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black54,
           leading: IconButton(
-            onPressed: () {
-              product.toggleFavourite();
+            onPressed: () async {
+              try {
+                await product.toggleFavourite();
+              } catch (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      duration: const Duration(seconds: 4),
+                      content: Text(error.toString()),
+                      ),
+                );
+              }
             },
             icon: Consumer<Product>(
               builder: (ctx, product, child) => Icon(
@@ -47,18 +57,17 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {
               ScaffoldMessenger.maybeOf(context)?.clearSnackBars();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  duration:const Duration(
-                    seconds:4
-                  ),
-                  content: const Text('Item added in your cart !'),
-                  action: SnackBarAction(
-                    label: 'See Cart',
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(CartScreen.routeName);
-                    },
-                  )),
-                  );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    duration: const Duration(seconds: 4),
+                    content: const Text('Item added in your cart !'),
+                    action: SnackBarAction(
+                      label: 'See Cart',
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(CartScreen.routeName);
+                      },
+                    )),
+              );
               cartProvider.addItemsInCart(
                   product.id, product.title, product.price);
             },

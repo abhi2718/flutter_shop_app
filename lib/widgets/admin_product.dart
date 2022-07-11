@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/edit_product_screen.dart';
@@ -18,6 +20,7 @@ class AdminProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final snackBar = ScaffoldMessenger.of(context);
     ProductList productsProvider =
         Provider.of<ProductList>(context, listen: true);
     return ListTile(
@@ -40,8 +43,13 @@ class AdminProductItem extends StatelessWidget {
             //   ),
             // ),
             IconButton(
-              onPressed: () {
-                productsProvider.deleteProduct(id);
+              onPressed: () async {
+                try {
+                  await productsProvider.deleteProduct(id);
+                } catch (error) {
+                  snackBar
+                      .showSnackBar(SnackBar(content: Text(error.toString())));
+                }
               },
               icon: const Icon(
                 Icons.delete,

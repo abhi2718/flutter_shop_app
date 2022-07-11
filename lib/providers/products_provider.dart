@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './product.dart';
+import '../models/http_exception_handler.dart';
 
 class ProductList with ChangeNotifier {
   List<Product> _productList = [];
@@ -93,7 +94,7 @@ class ProductList with ChangeNotifier {
 
   fetchAndAddProducts() async {
     final url = Uri.parse(
-        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
+        'https://shop-c2818-default-rtdb.firebaseio.com/products');
     try {
       final response = await http.get(url);
       final body = json.decode(response.body) as Map<String, dynamic>;
@@ -132,8 +133,25 @@ class ProductList with ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteProduct(id) {
+  deleteProduct(id) async {
+    final existingProductIndex =
+        _productList.indexWhere((element) => element.id == id);
+    Product? existingProduct = _productList[existingProductIndex];
     _productList.removeWhere((element) => element.id == id);
     notifyListeners();
+    try {
+      final url = Uri.parse(
+          'https://shop-c2818-default-rtdb.firebaseio.com/products/$id.json');
+      final response = await http.delete(url);
+      if (response.statusCode == 200) {
+        existingProduct = null;
+      } else {
+        throw HttpException('Some things went wrong');
+      }
+    } catch (error) {
+      _productList.insert(existingProductIndex, existingProduct!);
+      notifyListeners();
+      rethrow;
+    }
   }
 }

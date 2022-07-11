@@ -28,13 +28,22 @@ class CartScreen extends StatelessWidget {
                     const Text('Total'),
                     Chip(label: Text('₹ ${cartProvider.totalAmount}')),
                     ElevatedButton(
-                      onPressed: () {
-                        orderProvider.addOrderItem(
-                            DateTime.now().toString(),
-                            cartProvider.totalAmount,
-                            cartProvider.getItemsInCart.values.toList());
-                        cartProvider.clearCart();
-                        Navigator.of(context).pushNamed(OrderScreen.routeName);
+                      onPressed: () async {
+                        try {
+                          await orderProvider.addOrderItem(
+                              DateTime.now().toString(),
+                              cartProvider.totalAmount,
+                              cartProvider.getItemsInCart.values.toList());
+                          cartProvider.clearCart();
+                          Navigator.of(context)
+                              .pushNamed(OrderScreen.routeName);
+                        } catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Some things went wrong'),
+                            ),
+                            );
+                        }
                       },
                       child: const Text('Order Now'),
                     )
@@ -67,7 +76,8 @@ class CartScreen extends StatelessWidget {
                                     .id);
                               }),
                           ElevatedButton(
-                              child: const Text('Cancel'), onPressed: () {
+                              child: const Text('Cancel'),
+                              onPressed: () {
                                 Navigator.of(context).pop(false);
                               }),
                         ],
