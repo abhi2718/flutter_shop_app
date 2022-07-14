@@ -101,8 +101,22 @@ class _AuthCardState extends State<AuthCard> {
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
+  showAlert(message, context) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              content: Text(message),
+              actions: [
+                ElevatedButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })
+              ],
+            ));
+  }
 
-  void _submit() async {
+  void _submit(context) async {
     final isFormValid = _formKey.currentState!.validate();
     if (!isFormValid) {
       return;
@@ -111,16 +125,34 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
-      //print(_authData);
-      final String? email = _authData['email'];
-      final String? password = _authData['password'];
-      await Provider.of<Auth>(context, listen: false).signup(
-        email,
-        password
+    try {
+      if (_authMode == AuthMode.Login) {
+        final String? email = _authData['email'];
+        final String? password = _authData['password'];
+        await Provider.of<Auth>(context, listen: false).signin(email, password);
+      } else {
+        final String? email = _authData['email'];
+        final String? password = _authData['password'];
+        await Provider.of<Auth>(context, listen: false).signup(email, password);
+      }
+    } catch (error) {
+      var message = 'authentication failed';
+      if (error.toString() == 'EMAIL_NOT_FOUND') {
+        message = 'email not found';
+      } else if (error.toString() == 'INVALID_PASSWORD') {
+        message = 'invalid password';
+      } else if (error.toString() == 'EMAIL_EXISTS') {
+        message = 'email already exists';
+      } else if (error.toString() == 'TOO_MANY_ATTEMPTS_TRY_LATER') {
+        message = 'too many attempts';
+      } else if (error.toString() == 'OPERATION_NOT_ALLOWED') {
+        message = 'Password sign-in is disabled';
+      } else {
+        message = 'Some things went wrong';
+      }
+      showAlert(
+        message,
+        context
       );
     }
     setState(() {
@@ -210,7 +242,7 @@ class _AuthCardState extends State<AuthCard> {
                   RaisedButton(
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
+                    onPressed: ()=>_submit(context),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
