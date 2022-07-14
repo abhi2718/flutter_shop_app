@@ -459,3 +459,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
 //       });
 //       Navigator.of(context).pop();
 //     })
+
+
+// Firebase auth restAPI ->https://firebase.google.com/docs/reference/rest/auth
