@@ -4,9 +4,19 @@ import 'package:http/http.dart' as http;
 import '../models/http_exception_handler.dart';
 
 class Auth with ChangeNotifier {
-  late String _token;
-  late String _userId;
+  String _token = '';
+  String _userId = '';
   late DateTime _tokenExpiryDate;
+  bool get isAuth {
+    return token != null;
+  }
+
+  get token {
+    if (_token != '') {
+      return _token;
+    }
+    return null;
+  }
 
   signup(String? email, String? password) async {
     final url = Uri.parse(
@@ -18,16 +28,19 @@ class Auth with ChangeNotifier {
       );
       final body = json.decode(response.body);
       final statusCode = response.statusCode;
-       if (statusCode == 200) {
-        
+      if (statusCode == 200) {
+        _userId = body['localId'];
+        _token = body['idToken'];
+        notifyListeners();
       } else {
         if (body.containsKey('error')) {
           throw HttpException(body['error']['message']);
-        }else{
+        } else {
           throw HttpException('Some things went wrong !');
         }
       }
     } catch (error) {
+      print(error);
       rethrow;
     }
   }
@@ -43,11 +56,13 @@ class Auth with ChangeNotifier {
       final body = json.decode(response.body);
       final statusCode = response.statusCode;
       if (statusCode == 200) {
-        
+        _userId = body['localId'];
+        _token = body['idToken'];
+        notifyListeners();
       } else {
         if (body.containsKey('error')) {
           throw HttpException(body['error']['message']);
-        }else{
+        } else {
           throw HttpException('Some things went wrong !');
         }
       }

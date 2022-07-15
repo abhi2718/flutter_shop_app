@@ -34,24 +34,26 @@ class App extends StatelessWidget {
           create: (context) => Order(),
         ),
       ],
-      child: MaterialApp(
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
-              .copyWith(secondary: Colors.deepOrange),
-          fontFamily: 'Lato',
-        ),
-        initialRoute: '/auth',
-        routes: {
-          AuthScreen.routeName: (context) => const AuthScreen(),
-          ProductOverview.routeName: (context) => const ProductOverview(),
-          ProductDetail.routeName: (context) => const ProductDetail(),
-          CartScreen.routeName: (context) => const CartScreen(),
-          OrderScreen.routeName: (context) => const OrderScreen(),
-          EditOrDeleteProduct.routeName: (context) =>
-              const EditOrDeleteProduct(),
-          EditProductScreen.routeName: (context) => const EditProductScreen()
-        },
-      ),
+      child: Consumer<Auth>(builder: ((context, auth, child) {
+        return MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+                .copyWith(secondary: Colors.deepOrange),
+            fontFamily: 'Lato',
+          ),
+          home:auth.isAuth? const ProductOverview():const AuthScreen(),
+          routes: {
+            AuthScreen.routeName: (context) => const AuthScreen(),
+            ProductOverview.routeName: (context) => const ProductOverview(),
+            ProductDetail.routeName: (context) => const ProductDetail(),
+            CartScreen.routeName: (context) => const CartScreen(),
+            OrderScreen.routeName: (context) => const OrderScreen(),
+            EditOrDeleteProduct.routeName: (context) =>
+                const EditOrDeleteProduct(),
+            EditProductScreen.routeName: (context) => const EditProductScreen()
+          },
+        );
+      })),
     );
   }
 }
