@@ -53,9 +53,9 @@ class ProductList with ChangeNotifier {
   // }
 
   add(data) async {
-    final url = Uri.parse(
-        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
     try {
+      final url = Uri.parse(
+          'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
       final response = await http.post(
         url,
         body: json.encode({
@@ -94,7 +94,7 @@ class ProductList with ChangeNotifier {
 
   fetchAndAddProducts() async {
     final url = Uri.parse(
-        'https://shop-c2818-default-rtdb.firebaseio.com/products');
+        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
     try {
       final response = await http.get(url);
       final body = json.decode(response.body) as Map<String, dynamic>;

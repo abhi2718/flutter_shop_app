@@ -9,6 +9,7 @@ import '../widgets/badge.dart';
 import '../screens/cart.dart';
 import '../providers/products_provider.dart';
 import '../providers/product.dart';
+import '../providers/auth.dart';
 
 enum FilterOptions {
   onlyFavorites,
@@ -17,7 +18,8 @@ enum FilterOptions {
 
 class ProductOverview extends StatefulWidget {
   static const routeName = '/products';
-  const ProductOverview({Key? key}) : super(key: key);
+  final String token;
+  const ProductOverview({Key? key, required this.token}) : super(key: key);
   @override
   State<ProductOverview> createState() => _ProductOverviewState();
 }
@@ -28,8 +30,9 @@ class _ProductOverviewState extends State<ProductOverview> {
   @override
   void initState() {
     super.initState();
-    final url = Uri.parse(
-        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
+    const uri =
+        'https://shop-c2818-default-rtdb.firebaseio.com/products.json?auth=IlPXOMwksfCOYJ8Xle5W90JG2xSEeQwswJr2Ccr4';
+    final url = Uri.parse(uri);
     http.get(url).then((response) {
       final body = json.decode(response.body);
       final statusCode = response.statusCode;
@@ -46,13 +49,14 @@ class _ProductOverviewState extends State<ProductOverview> {
           ));
         });
         Provider.of<ProductList>(context, listen: false).addProducts(_products);
-         setState(() {
-         _isLoading = false;
+        setState(() {
+          _isLoading = false;
         });
       } else {
         throw body;
       }
     }).catchError((error) {
+      print(error);
       setState(() {
         _isLoading = false;
       });

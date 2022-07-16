@@ -40,7 +40,6 @@ class Auth with ChangeNotifier {
         }
       }
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

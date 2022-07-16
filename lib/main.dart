@@ -41,10 +41,10 @@ class App extends StatelessWidget {
                 .copyWith(secondary: Colors.deepOrange),
             fontFamily: 'Lato',
           ),
-          home:auth.isAuth? const ProductOverview():const AuthScreen(),
+          home:auth.isAuth?  ProductOverview(token: auth.token):const AuthScreen(),
           routes: {
             AuthScreen.routeName: (context) => const AuthScreen(),
-            ProductOverview.routeName: (context) => const ProductOverview(),
+            ProductOverview.routeName: (context) =>  ProductOverview(token: auth.token),
             ProductDetail.routeName: (context) => const ProductDetail(),
             CartScreen.routeName: (context) => const CartScreen(),
             OrderScreen.routeName: (context) => const OrderScreen(),
