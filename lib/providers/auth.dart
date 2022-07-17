@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 import '../models/http_exception_handler.dart';
 
 class Auth with ChangeNotifier {
   String _token = '';
   String _userId = '';
+  var _timer;
   final dbSecret = 'IlPXOMwksfCOYJ8Xle5W90JG2xSEeQwswJr2Ccr4';
   bool get isAuth {
     return token != null;
@@ -57,6 +59,7 @@ class Auth with ChangeNotifier {
       if (statusCode == 200) {
         _userId = body['localId'];
         _token = body['idToken'];
+        autoLogout();
         notifyListeners();
       } else {
         if (body.containsKey('error')) {
@@ -68,5 +71,18 @@ class Auth with ChangeNotifier {
     } catch (error) {
       rethrow;
     }
+  }
+
+  void logout() {
+    _token = '';
+    _userId = '';
+    notifyListeners();
+  }
+
+  void autoLogout() {
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    _timer = Timer(const Duration(seconds: 3), logout);
   }
 }
