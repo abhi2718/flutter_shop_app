@@ -10,12 +10,14 @@ class AdminProductItem extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double price;
+  final String token;
   const AdminProductItem({
     Key? key,
     required this.id,
     required this.title,
     required this.imageUrl,
     required this.price,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -45,7 +47,7 @@ class AdminProductItem extends StatelessWidget {
             IconButton(
               onPressed: () async {
                 try {
-                  await productsProvider.deleteProduct(id);
+                  await productsProvider.deleteProduct(id,token);
                 } catch (error) {
                   snackBar
                       .showSnackBar(SnackBar(content: Text(error.toString())));

@@ -19,13 +19,13 @@ class Product with ChangeNotifier {
       required this.imageUrl,
       this.isFavourite = false});
 
-  toggleFavourite() async {
+  toggleFavourite(token) async {
     var oldFavouriteStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners(); // it will call all the registered listeners
     try {
       final url = Uri.parse(
-          'https://shop-c2818-default-rtdb.firebaseio.com/products/$id.json');
+          'https://shop-c2818-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
       final response = await http.patch(url,
           body: json.encode({'isFavourite': isFavourite}));
       if (response.statusCode == 200) {

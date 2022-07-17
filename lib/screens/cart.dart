@@ -4,16 +4,17 @@ import '../providers/cart.dart';
 import '../providers/order.dart';
 import '../screens/order.dart';
 
- class CartScreen extends StatefulWidget {
-   static const routeName = '/cart';
-   const CartScreen({ Key? key }) : super(key: key);
-   @override
-   State<CartScreen> createState() => _CartScreenState();
- }
- 
- class _CartScreenState extends State<CartScreen> {
-   bool _loading = false;
-   @override
+class CartScreen extends StatefulWidget {
+  static const routeName = '/cart';
+  final String token;
+  const CartScreen({Key? key, required this.token}) : super(key: key);
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  bool _loading = false;
+  @override
   Widget build(BuildContext context) {
     Cart cartProvider = Provider.of<Cart>(context, listen: true);
     Order orderProvider = Provider.of<Order>(context, listen: false);
@@ -32,38 +33,44 @@ import '../screens/order.dart';
                   children: [
                     const Text('Total'),
                     Chip(label: Text('₹ ${cartProvider.totalAmount}')),
-                    _loading?const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(
-                      strokeWidth:2,
-                    )):
-                    ElevatedButton(
-                      onPressed: () async {
-                        setState(() {
-                          _loading=true;
-                        });
-                        try {
-                          await orderProvider.addOrderItem(
-                              DateTime.now().toString(),
-                              cartProvider.totalAmount,
-                              cartProvider.getItemsInCart.values.toList());
-                          setState(() {
-                           _loading=false;
-                          });
-                          cartProvider.clearCart();
-                          Navigator.of(context)
-                              .pushNamed(OrderScreen.routeName);
-                        } catch (error) {
-                           setState(() {
-                           _loading=false;
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Some things went wrong'),
-                            ),
-                            );
-                        }
-                      },
-                      child: const Text('Order Now'),
-                    )
+                    _loading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ))
+                        : ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                _loading = true;
+                              });
+                              try {
+                                await orderProvider.addOrderItem(
+                                  DateTime.now().toString(),
+                                  cartProvider.totalAmount,
+                                  cartProvider.getItemsInCart.values.toList(),
+                                  widget.token,
+                                );
+                                setState(() {
+                                  _loading = false;
+                                });
+                                cartProvider.clearCart();
+                                Navigator.of(context)
+                                    .pushNamed(OrderScreen.routeName);
+                              } catch (error) {
+                                setState(() {
+                                  _loading = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Some things went wrong'),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text('Order Now'),
+                          )
                   ],
                 ),
               ),
@@ -136,5 +143,4 @@ import '../screens/order.dart';
           ),
         ]));
   }
- }
-
+}

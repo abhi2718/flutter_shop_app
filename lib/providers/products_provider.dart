@@ -52,10 +52,10 @@ class ProductList with ChangeNotifier {
   //   });
   // }
 
-  add(data) async {
+  add(data,token) async {
     try {
       final url = Uri.parse(
-          'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
+          'https://shop-c2818-default-rtdb.firebaseio.com/products.json?auth=$token');
       final response = await http.post(
         url,
         body: json.encode({
@@ -92,9 +92,9 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  fetchAndAddProducts() async {
+  fetchAndAddProducts(token) async {
     final url = Uri.parse(
-        'https://shop-c2818-default-rtdb.firebaseio.com/products.json');
+        'https://shop-c2818-default-rtdb.firebaseio.com/products.json?auth=$token');
     try {
       final response = await http.get(url);
       final body = json.decode(response.body) as Map<String, dynamic>;
@@ -133,7 +133,7 @@ class ProductList with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteProduct(id) async {
+  deleteProduct(id,token) async {
     final existingProductIndex =
         _productList.indexWhere((element) => element.id == id);
     Product? existingProduct = _productList[existingProductIndex];
@@ -141,7 +141,7 @@ class ProductList with ChangeNotifier {
     notifyListeners();
     try {
       final url = Uri.parse(
-          'https://shop-c2818-default-rtdb.firebaseio.com/products/$id.json');
+          'https://shop-c2818-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
       final response = await http.delete(url);
       if (response.statusCode == 200) {
         existingProduct = null;

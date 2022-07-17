@@ -12,9 +12,9 @@ class Order with ChangeNotifier {
     return [..._orderItems];
   }
 
-  addOrderItem(id, totalAmount, items) async {
+  addOrderItem(id, totalAmount, items,token) async {
     final url =
-        Uri.parse('https://shop-c2818-default-rtdb.firebaseio.com/orders.json');
+        Uri.parse('https://shop-c2818-default-rtdb.firebaseio.com/orders.json?auth=$token');
     try {
       final response = await http.post(
         url,
@@ -53,9 +53,9 @@ class Order with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndAddOrders() async {
+  Future<void> fetchAndAddOrders(token) async {
     final url =
-        Uri.parse('https://shop-c2818-default-rtdb.firebaseio.com/orders.json');
+        Uri.parse('https://shop-c2818-default-rtdb.firebaseio.com/orders.json?auth=$token');
     try {
       final response = await http.get(url);
       final body = json.decode(response.body) as Map<String, dynamic>;
@@ -83,7 +83,6 @@ class Order with ChangeNotifier {
         throw HttpException('Some things went wrong !');
       }
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

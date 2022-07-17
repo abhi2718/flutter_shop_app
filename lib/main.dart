@@ -41,16 +41,15 @@ class App extends StatelessWidget {
                 .copyWith(secondary: Colors.deepOrange),
             fontFamily: 'Lato',
           ),
-          home:auth.isAuth?  ProductOverview(token: auth.token):const AuthScreen(),
+          home:auth.isAuth?  ProductOverview(token: auth.dbSecret):const AuthScreen(),
           routes: {
-            AuthScreen.routeName: (context) => const AuthScreen(),
-            ProductOverview.routeName: (context) =>  ProductOverview(token: auth.token),
+            ProductOverview.routeName: (context) =>  ProductOverview(token: auth.dbSecret),
             ProductDetail.routeName: (context) => const ProductDetail(),
-            CartScreen.routeName: (context) => const CartScreen(),
-            OrderScreen.routeName: (context) => const OrderScreen(),
+            CartScreen.routeName: (context) =>  CartScreen(token: auth.dbSecret),
+            OrderScreen.routeName: (context) =>  OrderScreen(token: auth.dbSecret),
             EditOrDeleteProduct.routeName: (context) =>
-                const EditOrDeleteProduct(),
-            EditProductScreen.routeName: (context) => const EditProductScreen()
+                EditOrDeleteProduct(token: auth.dbSecret),
+            EditProductScreen.routeName: (context) =>  EditProductScreen(token: auth.dbSecret)
           },
         );
       })),

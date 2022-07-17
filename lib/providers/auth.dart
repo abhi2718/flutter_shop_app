@@ -6,7 +6,7 @@ import '../models/http_exception_handler.dart';
 class Auth with ChangeNotifier {
   String _token = '';
   String _userId = '';
-  late DateTime _tokenExpiryDate;
+  final dbSecret = 'IlPXOMwksfCOYJ8Xle5W90JG2xSEeQwswJr2Ccr4';
   bool get isAuth {
     return token != null;
   }

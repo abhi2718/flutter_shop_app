@@ -6,7 +6,8 @@ import '../providers/cart.dart';
 import '../screens/cart.dart';
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({Key? key}) : super(key: key);
+  final String token;
+  const ProductItem({Key? key, required this.token}) : super(key: key);
 
   get seconds => null;
   @override
@@ -31,13 +32,13 @@ class ProductItem extends StatelessWidget {
           leading: IconButton(
             onPressed: () async {
               try {
-                await product.toggleFavourite();
+                await product.toggleFavourite(token);
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      duration: const Duration(seconds: 4),
-                      content: Text(error.toString()),
-                      ),
+                    duration: const Duration(seconds: 4),
+                    content: Text(error.toString()),
+                  ),
                 );
               }
             },

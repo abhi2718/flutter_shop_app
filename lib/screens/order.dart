@@ -5,7 +5,8 @@ import '../widgets/main_drawer.dart';
 
 class OrderScreen extends StatefulWidget {
   static const routeName = '/order';
-  const OrderScreen({Key? key}) : super(key: key);
+  final String token;
+  const OrderScreen({Key? key,required this.token}) : super(key: key);
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -14,7 +15,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   late Future _ordersFuture;
   Future _obtainOrderFuture(){
-    return Provider.of<Order>(context, listen: false).fetchAndAddOrders();
+    return Provider.of<Order>(context, listen: false).fetchAndAddOrders(widget.token);
   }
   @override 
   void initState() {

@@ -30,8 +30,8 @@ class _ProductOverviewState extends State<ProductOverview> {
   @override
   void initState() {
     super.initState();
-    const uri =
-        'https://shop-c2818-default-rtdb.firebaseio.com/products.json?auth=IlPXOMwksfCOYJ8Xle5W90JG2xSEeQwswJr2Ccr4';
+    final uri =
+        'https://shop-c2818-default-rtdb.firebaseio.com/products.json?auth=${widget.token}';
     final url = Uri.parse(uri);
     http.get(url).then((response) {
       final body = json.decode(response.body);
@@ -56,10 +56,22 @@ class _ProductOverviewState extends State<ProductOverview> {
         throw body;
       }
     }).catchError((error) {
-      print(error);
       setState(() {
         _isLoading = false;
       });
+      showDialog(
+          context: context,
+          builder: (context) =>  AlertDialog(
+                title: const Text('Some things went wrong'),
+                actions: [
+                  ElevatedButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
     });
   }
 
@@ -114,6 +126,7 @@ class _ProductOverviewState extends State<ProductOverview> {
             )
           : ProductGrid(
               showFavorite: _showFavorite,
+              token:widget.token
             ),
     );
   }

@@ -7,11 +7,12 @@ import '../screens/edit_product_screen.dart';
 
 class EditOrDeleteProduct extends StatelessWidget {
   static const routeName = '/edit_or_delete_product';
-  const EditOrDeleteProduct({Key? key}) : super(key: key);
+  final String token;
+  const EditOrDeleteProduct({Key? key, required this.token}) : super(key: key);
   Future<void> reloadProduct(BuildContext context) async {
     try {
       await Provider.of<ProductList>(context, listen: false)
-          .fetchAndAddProducts();
+          .fetchAndAddProducts(token);
     } catch (error) {
       showDialog(
           context: context,
@@ -20,7 +21,7 @@ class EditOrDeleteProduct extends StatelessWidget {
                 content: const Text('Some things went wrong'),
                 actions: [
                   ElevatedButton(
-                      child:const  Text('OK'),
+                      child: const Text('OK'),
                       onPressed: () {
                         Navigator.of(ctx).pop();
                       })
@@ -52,6 +53,7 @@ class EditOrDeleteProduct extends StatelessWidget {
                 title: value.getProducts[index].title,
                 price: value.getProducts[index].price,
                 imageUrl: value.getProducts[index].imageUrl,
+                token:token,
               ),
               itemCount: value.getProducts.length,
             );

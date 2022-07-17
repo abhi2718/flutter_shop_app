@@ -4,7 +4,8 @@ import '../providers/products_provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit_product_screen';
-  const EditProductScreen({Key? key}) : super(key: key);
+  final String token;
+  const EditProductScreen({Key? key,required this.token}) : super(key: key);
 
   @override
   State<EditProductScreen> createState() => _EditProductScreenState();
@@ -70,7 +71,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     //   Navigator.of(context).pop();
     // });
     try {
-      final response = await productsProvider.add(data);
+      final response = await productsProvider.add(data,widget.token);
       if (!response['success']) {
         throw response;
       }
