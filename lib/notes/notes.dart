@@ -462,3 +462,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
 
 // Firebase auth restAPI ->https://firebase.google.com/docs/reference/rest/auth
+// npm -> pub.dev
+// dartpad ->https://dartpad.dev/?
+// localStorage in flutter is ->shared_preferences
+// redux -> provider
+
+// flutter commonds
+// flutter run -> start project
+// to install all the package present in pubspec.yaml file -> flutter packages get
+// adding package -> flutter pub add packageName -> after adding alway run flutter packages get

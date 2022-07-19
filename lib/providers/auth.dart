@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/http_exception_handler.dart';
 
 class Auth with ChangeNotifier {
@@ -20,6 +21,12 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  setDataInLocalStorage(key, data) async {
+    final parseData = json.encode(data);
+    final localStorage = await SharedPreferences.getInstance();
+    localStorage.setString(key, parseData);
+  }
+
   signup(String? email, String? password) async {
     final url = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAighiAgiJtgvIfJ9yawEpOenr3wHE2pMg');
@@ -33,6 +40,10 @@ class Auth with ChangeNotifier {
       if (statusCode == 200) {
         _userId = body['localId'];
         _token = body['idToken'];
+        setDataInLocalStorage('userData', {
+          "userId": body['localId'],
+          "token": body['idToken'],
+        });
         notifyListeners();
       } else {
         if (body.containsKey('error')) {
@@ -59,7 +70,11 @@ class Auth with ChangeNotifier {
       if (statusCode == 200) {
         _userId = body['localId'];
         _token = body['idToken'];
-        autoLogout();
+        setDataInLocalStorage('userData', {
+          "userId": body['localId'],
+          "token": body['idToken'],
+        });
+        // autoLogout();
         notifyListeners();
       } else {
         if (body.containsKey('error')) {
@@ -73,9 +88,11 @@ class Auth with ChangeNotifier {
     }
   }
 
-  void logout() {
+  void logout() async {
     _token = '';
     _userId = '';
+    final localStorage = await SharedPreferences.getInstance();
+    localStorage.clear();
     notifyListeners();
   }
 

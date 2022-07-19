@@ -1,13 +1,26 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import './product.dart';
 import '../models/http_exception_handler.dart';
 
 class ProductList with ChangeNotifier {
   List<Product> _productList = [];
+  getDataFromLocalStorage([key = 'userData']) async {
+    final localStorage = await SharedPreferences.getInstance();
+    if (!localStorage.containsKey(key)) {
+      return false;
+    }
+    var data;
+    if (localStorage.getString(key) != null) {
+      data = localStorage.getString('userData');
+      data = json.decode(data) ;
+    }
+  }
 
   List<Product> get getProducts {
+    getDataFromLocalStorage();
     return [..._productList];
   }
 
@@ -52,7 +65,7 @@ class ProductList with ChangeNotifier {
   //   });
   // }
 
-  add(data,token) async {
+  add(data, token) async {
     try {
       final url = Uri.parse(
           'https://shop-c2818-default-rtdb.firebaseio.com/products.json?auth=$token');
@@ -133,7 +146,7 @@ class ProductList with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteProduct(id,token) async {
+  deleteProduct(id, token) async {
     final existingProductIndex =
         _productList.indexWhere((element) => element.id == id);
     Product? existingProduct = _productList[existingProductIndex];
